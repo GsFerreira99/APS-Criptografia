@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 apsenv/
-
+.idea/
 # Distribution / packaging
 .Python
 build/
