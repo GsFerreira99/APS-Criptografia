@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+apsenv/
+
 # Distribution / packaging
 .Python
 build/
