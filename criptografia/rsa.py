@@ -76,10 +76,9 @@ def criptografia_rsa():
     n = p * q
     totiente = (p - 1) * (q - 1)
     e = gerar_chave_publica(totiente)
+    d = gerar_chave_privada(totiente, e)
 
     print(f'\nChave publica: ({n} , {e})')
-
-    d = gerar_chave_privada(totiente, e)
     print(f'\nChave privada: ({n} , {d})')
 
     msg = cifrar(msg, e, n)
@@ -91,5 +90,44 @@ def criptografia_rsa():
     print(f'\nMENSAGEM DECIFRADA: {msg}')
 
 
-criptografia_rsa()
+"""criptografia_rsa()
 print('Terminou')
+"""
+
+def primo(n): # verifica se o número é primo
+    if n <= 1:
+        return False
+
+    if n <=3:
+        return True
+
+    if n%2 == 0 or n%3 == 0:
+        return False
+
+    i = 5
+    while (i * i) <= n:
+        if (n % i) == 0 or (n % (i + 2)) == 0:
+            return False
+        i += 6
+    return True
+
+
+def gerar_numero(): # gera um número primo aleatório
+
+    while True:
+        numero = rd.randint(1000, 9999)
+        if primo(numero) == True:
+            return numero
+def gerar_chaves():
+    p = gerar_numero()
+    q = gerar_numero()
+
+    #p = 42
+    #q = 1009
+    n = p * q
+    totiente = (p - 1) * (q - 1)
+    e = gerar_chave_publica(totiente)
+    d = gerar_chave_privada(totiente, e)
+    return {'publica': f"{n},{e}", 'privada': f"{n},{d}"}
+
+
