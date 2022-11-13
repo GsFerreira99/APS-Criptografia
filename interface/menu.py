@@ -125,11 +125,31 @@ def selecionar_opcao(msg: str = "\nSelecione uma das opções: ") -> str:
 def criptografar_texto():
     limpar()
     opcoes = {
-        '1': {
-            'texto': 'Salvar Chave Para Uso no Sistema.',
-        },
-    }
-    menu("CRIPTOGRAFAR MENSAGEM", {})
+          '1': {
+              'texto': 'Utilizar Chaves do Sistema.',
+          },
+          '2': {
+                  'texto': 'Utilizar Chave Externa.',
+              },
+          '0': {
+              'texto': 'Voltar',
+          },
+      }
+    menu("CRIPTOGRAFAR MENSAGEM", opcoes)
+    index = selecionar_opcao()
+
+    if index == '1':
+      try:
+        chaves = carregar_chaves()
+        chaves: dict = quebrar_string_chaves(chaves)
+        chave: list = chaves['publica']
+      except:
+        print('\nNão foi possivel encontrar o arquivo, verifique sua integridade ou gere novas chaves.')
+        return
+    elif index == '2':
+      chaves = input('\nInforme a chave pública a ser usada na criptografia ex.(n,e):\n')
+      chave = chaves.split(',')
+      
     while True:
         mensagem = input("Informe a mensagem a ser criptografada (obs.: máximo 180 caracteres): \n")
         if len(mensagem) > 180:
@@ -138,15 +158,13 @@ def criptografar_texto():
         elif len(mensagem) == 0:
             break
         else:
-            try:
-                chaves = carregar_chaves()
-            except:
-                print('\nNão foi possivel encontrar o arquivo, verifique sua integridade ou gere novas chaves.')
-                return
-            chaves: dict = quebrar_string_chaves(chaves)
-            chave: list = chaves['publica']
+          try:
             mensagem_cifrada = cifrar(mensagem, int(chave[1]), int(chave[0]))
             print(f"\nMensagem Criptografada: \n{mensagem_cifrada}")
+            break
+          except IndexError:
+            print('\nFormato da chave inválido não foi possivel criptografar a mensagem.).\n')
+            time.sleep(2)
             break
     input("\n\nPressione ENTER para retornar.")
 
@@ -161,18 +179,25 @@ def quebrar_string_chaves(chaves: dict) -> dict:
         chaves_dict[i] = keys
     return chaves_dict
 
+
 def decriptar_texto():
     limpar()
 
     menu("DECIFRAR MENSAGEM", {})
+
     try:
         chaves = carregar_chaves()
     except:
         print('\nNão foi possivel encontrar o arquivo, verifique sua integridade ou gere novas chaves.')
         return
+      
     chaves: dict = quebrar_string_chaves(chaves)
     chave_publica: list = chaves['publica']
     chave_privada: list = chaves['privada']
+
+    
+
+  
     while True:
         mensagem = input("Informe a mensagem a ser decifrada: \n")
         mensagem_decifrada = decifrarVirgula(mensagem,int(chave_privada[1]), int(chave_publica[1]), int(chave_publica[0]))
